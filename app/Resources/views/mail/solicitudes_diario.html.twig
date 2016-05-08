@@ -1,0 +1,42 @@
+{% extends 'mail/base.html.twig' %}
+
+{% block body %}
+    <div class=WordSection1>
+    <p class=MsoNormal>Solicitudes Completadas desde el &nbsp;Jueves 05/04/2016
+        <o:p></o:p>
+    </p>
+    <p class=MsoNormal>
+        <o:p>&nbsp;</o:p>
+    </p>
+    {% include 'mail/tabla_solicitudes.html.twig' with {'solicitudes': solicitudes} %}
+    <p class=MsoNormal>
+        <o:p>&nbsp;</o:p>
+    </p>
+    <p class=MsoNormal>
+        <o:p>&nbsp;</o:p>
+    </p>
+
+    {% include 'mail/acumulado.html.twig' %}
+
+
+    <p class=MsoNormal><b>Citas concertadas</b><span class=apple-converted-space>&nbsp;</span>del 05/05 al 06/05
+        <o:p></o:p>
+    </p>
+    <p class=MsoNormal>
+        <o:p>&nbsp;</o:p>
+    </p>
+        {% include 'mail/tabla_oficinas.html.twig' with {'oficinas': oficinas} %}
+    <p class=MsoNormal>
+        <o:p>&nbsp;</o:p>
+    </p>
+    <p class=MsoNormal>
+        <o:p>&nbsp;</o:p>
+    </p>
+    <p class=MsoNormal>El listado de solicitudes se encuentra en la carpeta compartida.
+        <o:p></o:p>
+    </p>
+    <p class=MsoNormal>Un saludo,
+        <o:p></o:p>
+    </p>
+    </div>
+{% endblock body %}

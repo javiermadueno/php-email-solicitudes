@@ -1,0 +1,21 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+#    parameter_name: value
+
+services:
+   solicitudes_repository:
+      class: AppBundle\Repository\SolicitudesRespository
+      arguments: ['@database_connection']
+
+   citas_repository:
+      class: AppBundle\Repository\CitasRepository
+      arguments: ['@database_connection']
+
+   app.services.mail_render:
+       class: AppBundle\Services\MailRender
+       arguments: ['@twig']
+
+   app.services.mail_sender:
+       class: AppBundle\Services\MailSender
+       arguments: ['@swiftmailer.mailer', '@app.services.mail_render']

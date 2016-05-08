@@ -1,0 +1,129 @@
+{% if oficinas|length > 0 %}
+
+    <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=928
+           style='width:696.0pt;margin-left:-.9pt;border-collapse:collapse'>
+        <tr style='height:15.75pt'>
+            <td width=415 nowrap
+                style='width:311.0pt;border:solid windowtext 1.0pt;background:#B8CCE4;padding:0cm 3.5pt 0cm 3.5pt;height:15.75pt'>
+                <p class=MsoNormal><b><span style='color:black;mso-fareast-language:ES'>Oficina de Gestión<o:p></o:p></span></b>
+                </p>
+            </td>
+            <td width=92 nowrap
+                style='width:69.0pt;border:solid windowtext 1.0pt;background:#B8CCE4;padding:0cm 3.5pt 0cm 3.5pt;height:15.75pt'>
+                <p class=MsoNormal><b><span style='color:black;mso-fareast-language:ES'>Usuario<o:p></o:p></span></b>
+                </p>
+            </td>
+            <td width=163 nowrap
+                style='width:122.0pt;border:solid windowtext 1.0pt;background:#B8CCE4;padding:0cm 3.5pt 0cm 3.5pt;height:15.75pt'>
+                <p class=MsoNormal><b><span style='color:black;mso-fareast-language:ES'>Oficina<o:p></o:p></span></b>
+                </p>
+            </td>
+            <td width=80 nowrap
+                style='width:60.0pt;border:solid windowtext 1.0pt;background:#B8CCE4;padding:0cm 3.5pt 0cm 3.5pt;height:15.75pt'>
+                <p class=MsoNormal><b><span style='color:black;mso-fareast-language:ES'>Total<o:p></o:p></span></b></p>
+            </td>
+            <td width=89 nowrap
+                style='width:67.0pt;border:solid windowtext 1.0pt;background:#B8CCE4;padding:0cm 3.5pt 0cm 3.5pt;height:15.75pt'>
+                <p class=MsoNormal><b><span style='color:black;mso-fareast-language:ES'>Capacidad<o:p></o:p></span></b>
+                </p>
+            </td>
+            <td width=89 nowrap
+                style='width:67.0pt;border:solid windowtext 1.0pt;background:#B8CCE4;padding:0cm 3.5pt 0cm 3.5pt;height:15.75pt'>
+                <p class=MsoNormal><b><span style='color:black;mso-fareast-language:ES'>Ocupación<o:p></o:p></span></b>
+                </p>
+            </td>
+        </tr>
+
+        {% set total_citas, total_bloqueadas, total_ocupacion, total_capacidad, total_porcentaje  = 0, 0, 0, 0, 0  %}
+
+        {% for oficina in oficinas %}
+            <tr style='height:15.0pt'>
+                <td width=415 nowrap
+                    style='width:311.0pt;border-top:none;border-left:solid windowtext 1.0pt;border-bottom:none;border-right:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt'>
+                    <p class=MsoNormal><span style='color:black;mso-fareast-language:ES'>{{ oficina.nombre }}
+                            <o:p></o:p></span>
+                    </p>
+                </td>
+                <td width=92 nowrap style='width:69.0pt;border-right:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt'>
+                    <p class=MsoNormal align=right style='text-align:right'><span
+                                style='color:black;mso-fareast-language:ES'>{{ oficina.citas }}
+                            <o:p></o:p></span></p>
+                </td>
+                <td width=163 nowrap style='width:122.0pt;border-right:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt'>
+                    <p class=MsoNormal align=right style='text-align:right'><span
+                                style='color:black;mso-fareast-language:ES'>{{ oficina.bloqueadas }}
+                            <o:p></o:p></span></p>
+                </td>
+                <td width=80 nowrap
+                    style='width:60.0pt;border-right:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt'>
+                    <p class=MsoNormal align=right style='text-align:right'><span
+                                style='color:black;mso-fareast-language:ES'>{{ oficina.ocupacion }}
+                            <o:p></o:p></span></p>
+                </td>
+                <td width=89 nowrap valign=bottom
+                    style='width:67.0pt;border:none;border-right:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt'>
+                    <p class=MsoNormal align=right style='text-align:right'><span
+                                style='color:black;mso-fareast-language:ES'>{{ oficina.capacidadReal }}
+                            <o:p></o:p></span></p>
+                </td>
+                <td width=89 nowrap valign=bottom
+                    style='width:67.0pt;border:none;border-right:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt'>
+                    <p class=MsoNormal align=right style='text-align:right'><span
+                                style='color:black;mso-fareast-language:ES'> {{ oficina.porcentajeOcupacion|number_format(2, '.') }}% <o:p></o:p></span>
+                    </p>
+                </td>
+            </tr>
+
+            {% set total_citas = total_citas + oficina.citas %}
+            {% set total_bloqueadas = total_bloqueadas + oficina.bloqueadas %}
+            {% set total_capacidad  = total_capacidad + oficina.capacidadReal %}
+            {% set total_ocupacion = total_ocupacion + oficina.ocupacion %}
+            {% set total_porcentaje = total_porcentaje + oficina.porcentajeOcupacion %}
+        {% endfor %}
+
+        <tr style='height:15.75pt'>
+            <td width=415 nowrap
+                style='width:311.0pt;border:solid windowtext 1.0pt;background:#DCE6F1;padding:0cm 3.5pt 0cm 3.5pt;height:15.75pt'>
+                <p class=MsoNormal><span style='color:black;mso-fareast-language:ES'>Total:<o:p></o:p></span></p>
+            </td>
+            <td width=92 nowrap valign=bottom
+                style='width:69.0pt;border-right:solid windowtext 1.0pt;border-top:solid windowtext 1.0pt;border-left:none;border-bottom:solid windowtext 1.0pt;border-right:none;background:#DCE6F1;padding:0cm 3.5pt 0cm 3.5pt;height:15.75pt'>
+                <p class=MsoNormal align=right style='text-align:right'><span
+                            style='color:black;mso-fareast-language:ES'>{{ total_citas|default(0) }}<o:p></o:p></span></p>
+            </td>
+            <td width=163 nowrap valign=bottom
+                style='width:122.0pt;border:solid windowtext 1.0pt;background:#DCE6F1;padding:0cm 3.5pt 0cm 3.5pt;height:15.75pt'>
+                <p class=MsoNormal align=right style='text-align:right'><span
+                            style='color:black;mso-fareast-language:ES'>{{ total_bloqueadas|default(0) }}<o:p></o:p></span></p>
+            </td>
+            <td width=80 nowrap valign=bottom
+                style='width:60.0pt;border:solid windowtext 1.0pt;border-left:none;background:#DCE6F1;padding:0cm 3.5pt 0cm 3.5pt;height:15.75pt'>
+                <p class=MsoNormal align=right style='text-align:right'><span
+                            style='color:black;mso-fareast-language:ES'>{{ total_ocupacion|default(0) }}<o:p></o:p></span></p>
+            </td>
+            <td width=89 nowrap valign=bottom
+                style='width:67.0pt;border:solid windowtext 1.0pt;border-left:none;background:#DCE6F1;padding:0cm 3.5pt 0cm 3.5pt;height:15.75pt'>
+                <p class=MsoNormal align=right style='text-align:right'><span
+                            style='color:black;mso-fareast-language:ES'>{{ total_capacidad|default(0) }}<o:p></o:p></span></p>
+            </td>
+            <td width=89 nowrap valign=bottom
+                style='width:67.0pt;border:solid windowtext 1.0pt;border-left:none;background:#DCE6F1;padding:0cm 3.5pt 0cm 3.5pt;height:15.75pt'>
+                <p class=MsoNormal align=right style='text-align:right'><span
+                            style='color:black;mso-fareast-language:ES'>{{ (100 * (total_ocupacion/total_capacidad))|number_format(2, ',', '.') }}%<o:p></o:p></span></p>
+            </td>
+        </tr>
+        <tr style='height:15.0pt'>
+            <td width=415 nowrap valign=bottom style='width:311.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt'></td>
+            <td width=92 nowrap valign=bottom style='width:69.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt'></td>
+            <td width=163 nowrap valign=bottom style='width:122.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt'></td>
+            <td width=80 nowrap valign=bottom style='width:60.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt'></td>
+            <td width=89 nowrap valign=bottom style='width:67.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt'>
+                <p class=MsoNormal><span style='color:black;mso-fareast-language:ES'>Ocup. Media:<o:p></o:p></span></p>
+            </td>
+            <td width=89 nowrap valign=bottom style='width:67.0pt;padding:0cm 3.5pt 0cm 3.5pt;height:15.0pt'>
+                <p class=MsoNormal align=right style='text-align:right'><span
+                            style='color:black;mso-fareast-language:ES'>{{ (total_porcentaje/(oficinas|length))|number_format(2, ',', '.') }}%<o:p></o:p></span></p>
+            </td>
+        </tr>
+    </table>
+{% endif %}
