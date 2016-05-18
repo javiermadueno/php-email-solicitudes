@@ -16,6 +16,7 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 class CitasRepository
 {
+    const FORMATO_FECHA = 'Y-m-d';
 
     /**
      * @var Connection
@@ -104,14 +105,14 @@ class CitasRepository
 
         $stmt = $this->connection->prepare($sql);
 
-        $stmt->bindValue(1, $fecha->format('Y-m-d'));
-        $stmt->bindValue(2, $siguiente->format('Y-m-d'));
-        $stmt->bindValue(3, $fecha->format('Y-m-d'));
-        $stmt->bindValue(4, $siguiente->format('Y-m-d'));
-        $stmt->bindValue(5, $fecha->format('Y-m-d'));
-        $stmt->bindValue(6, $siguiente->format('Y-m-d'));
-        $stmt->bindValue(7, $fecha->format('Y-m-d'));
-        $stmt->bindValue(8, $siguiente->format('Y-m-d'));
+        $stmt->bindValue(1, $fecha->format(self::FORMATO_FECHA));
+        $stmt->bindValue(2, $siguiente->format(self::FORMATO_FECHA));
+        $stmt->bindValue(3, $fecha->format(self::FORMATO_FECHA));
+        $stmt->bindValue(4, $siguiente->format(self::FORMATO_FECHA));
+        $stmt->bindValue(5, $fecha->format(self::FORMATO_FECHA));
+        $stmt->bindValue(6, $siguiente->format(self::FORMATO_FECHA));
+        $stmt->bindValue(7, $fecha->format(self::FORMATO_FECHA));
+        $stmt->bindValue(8, $siguiente->format(self::FORMATO_FECHA));
         $stmt->bindValue(9, $dia);
         $stmt->bindValue(10, $dia_siguiente);
 

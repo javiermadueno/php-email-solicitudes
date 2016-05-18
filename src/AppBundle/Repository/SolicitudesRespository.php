@@ -15,6 +15,15 @@ class SolicitudesRespository
 {
 
     const FORMATO_FECHA = 'Y-m-d';
+
+    protected $fechaInicioNormal;
+
+    protected $fechaInicioJoven;
+
+    protected  $fechaInicioTerceraEdad;
+
+    protected  $fechaInicioDuplicados;
+
     /**
      * @var Connection
      */
@@ -26,6 +35,10 @@ class SolicitudesRespository
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
+        $this->fechaInicioJoven = new \DateTimeImmutable('2013-10-22');
+        $this->fechaInicioNormal =  new \DateTimeImmutable('2014-05-13');
+        $this->fechaInicioTerceraEdad = new \DateTimeImmutable('2014-06-15');
+        $this->fechaInicioDuplicados = new \DateTimeImmutable('2015-01-07');
     }
 
 
@@ -251,7 +264,7 @@ class SolicitudesRespository
                   OR a.tipo_abono = 'NORMAL'
                 )
                 AND b.Estado = 'SOLICITUD COMPLETADA'
-                AND a.Fecha_peticion >= '2014-05-13 00:00:00.000' -- Fecha inicio Normal B o C
+                AND a.Fecha_peticion >= '{$this->fechaInicioNormal->format(self::FORMATO_FECHA)}' -- Fecha inicio Normal B o C
                 AND a.Fecha_peticion < ?
                 AND a.id_usuario_digitalizador IS NULL -- Añadido nuevo el 28/07/2014 para exculuir las realizadas con digitalizador
                 AND a.Id NOT IN
@@ -262,7 +275,7 @@ class SolicitudesRespository
                   t_estados_solicitud Y
                 WHERE x.Id = y.Id_solicitud
                   AND y.Estado = 'ANULADA'
-                  AND x.Fecha_peticion >= '2014-05-13 00:00:00.000' -- Fecha inicio Normal B o C
+                  AND x.Fecha_peticion >= '{$this->fechaInicioNormal->format(self::FORMATO_FECHA)}' -- Fecha inicio Normal B o C
                   AND x.Fecha_peticion < ?)) z
             GROUP BY z.Tipo,
               z.tipo_abono
@@ -309,7 +322,7 @@ class SolicitudesRespository
                   OR a.tipo_abono = 'JOVEN'
                 )
                 AND b.Estado = 'SOLICITUD COMPLETADA'
-                AND a.Fecha_peticion >= '2013-10-22 00:00:00.000' -- Fecha inicio Joven B
+                AND a.Fecha_peticion >= '{$this->fechaInicioJoven->format(self::FORMATO_FECHA)}' -- Fecha inicio Joven B
                 AND a.Fecha_peticion < ?
                 AND a.id_usuario_digitalizador IS NULL -- Añadido nuevo el 28/07/2014 para exculuir las realizadas con digitalizador
                 AND a.Id NOT IN
@@ -320,7 +333,7 @@ class SolicitudesRespository
                   t_estados_solicitud Y
                 WHERE x.Id = y.Id_solicitud
                   AND y.Estado = 'ANULADA'
-                  AND x.Fecha_peticion >= '2013-10-22 00:00:00.000' -- Fecha inicio Joven B
+                  AND x.Fecha_peticion >= '{$this->fechaInicioJoven->format(self::FORMATO_FECHA)}' -- Fecha inicio Joven B
                   AND x.Fecha_peticion < ? )) z
             GROUP BY z.Tipo,
               z.tipo_abono
@@ -363,7 +376,7 @@ class SolicitudesRespository
               WHERE a.Id = b.Id_solicitud
                 AND a.tipo_abono = 'TERCERA EDAD_TE'
                 AND b.Estado = 'SOLICITUD COMPLETADA'
-                AND a.Fecha_peticion >= '2014-06-15 00:00:00.000' -- Fecha inicio Tercera Edad
+                AND a.Fecha_peticion >= '{$this->fechaInicioTerceraEdad->format(self::FORMATO_FECHA)}' -- Fecha inicio Tercera Edad
                 AND a.Fecha_peticion < ?
                 AND a.id_usuario_digitalizador IS NULL -- Añadido nuevo el 28/07/2014 para exculuir las realizadas con digitalizador
                 AND a.Id NOT IN
@@ -374,7 +387,7 @@ class SolicitudesRespository
                   t_estados_solicitud Y
                 WHERE x.Id = y.Id_solicitud
                   AND y.Estado = 'ANULADA'
-                  AND x.Fecha_peticion >= '2014-06-15 00:00:00.000' -- Fecha inicio Tercera Edad
+                  AND x.Fecha_peticion >= '{$this->fechaInicioTerceraEdad->format(self::FORMATO_FECHA)}' -- Fecha inicio Tercera Edad
                   AND x.Fecha_peticion < ? )) z
             GROUP BY z.Tipo,
               z.tipo_abono
@@ -412,7 +425,7 @@ class SolicitudesRespository
                 t_estados_solicitud_duplicado b
               WHERE a.Id = b.Id_solicitud
                 AND b.Estado = 'SOLICITUD COMPLETADA'
-                AND a.Fecha_peticion >= '2015-01-07 00:00:00.000' -- Fecha Inicio Duplicados
+                AND a.Fecha_peticion >= '{$this->fechaInicioDuplicados->format(self::FORMATO_FECHA)}' -- Fecha Inicio Duplicados
                 AND a.Fecha_peticion < ?
                 AND a.Id NOT IN
                 (SELECT
@@ -422,7 +435,7 @@ class SolicitudesRespository
                   t_estados_solicitud_duplicado Y
                 WHERE x.Id = y.Id_solicitud
                   AND y.Estado = 'ANULADA'
-                  AND x.Fecha_peticion >= '2015-01-07 00:00:00.000' -- Fecha Inicio Duplicados
+                  AND x.Fecha_peticion >= '{$this->fechaInicioDuplicados->format(self::FORMATO_FECHA)}' -- Fecha Inicio Duplicados
                   AND x.Fecha_peticion < ?
                   )
               ) z
@@ -458,7 +471,7 @@ class SolicitudesRespository
                 t_solicitud_infantil a,
                 t_estados_solicitud_infantil b
               WHERE a.Id = b.Id_solicitud
-                AND b.Estado = 'SOLICITUD COMPLETADA' -- a nd a.Fecha_peticion >= '2015-07-01 00:00:00.000' - - - - Fecha Inicio Infantil
+                AND b.Estado = 'SOLICITUD COMPLETADA' -- and a.Fecha_peticion >= '2015-07-01 00:00:00.000' - - - - Fecha Inicio Infantil
                 AND a.Fecha_peticion < ?
                 AND a.Id NOT IN
                 (SELECT
@@ -467,7 +480,7 @@ class SolicitudesRespository
                   t_solicitud_infantil X,
                   t_estados_solicitud_infantil Y
                 WHERE x.Id = y.Id_solicitud
-                  AND y.Estado = 'ANULADA' -- a nd x.Fecha_peticion >= '2015-07-01 00:00:00.000' - - - - Fecha Inicio Infantil
+                  AND y.Estado = 'ANULADA' -- and x.Fecha_peticion >= '2015-07-01 00:00:00.000' - - - - Fecha Inicio Infantil
                   AND x.Fecha_peticion < ?)) z
         ";
 
