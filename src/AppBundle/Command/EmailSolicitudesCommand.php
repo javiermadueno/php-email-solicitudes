@@ -69,7 +69,8 @@ class EmailSolicitudesCommand extends ContainerAwareCommand
                     'oficinas'     => $oficinas,
                     'hoy'          => $hoy,
                     'desde'        => $desde,
-                    'manana'       => $manana
+                    'manana'       => $manana,
+                    'acumulados'   => $acumulados
                 ]);
         }
 
@@ -216,6 +217,8 @@ class EmailSolicitudesCommand extends ContainerAwareCommand
             $table->addRows($acumulados);
 
             $table->render();
+
+            $this->output->writeln(print_r($acumulados));
         }
 
         return $acumulados;

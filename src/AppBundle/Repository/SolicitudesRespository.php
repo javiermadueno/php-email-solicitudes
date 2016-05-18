@@ -291,7 +291,19 @@ class SolicitudesRespository
 
         $stmt->execute();
 
-        return $stmt->fetchAll();
+        $solicitudes = array();
+
+        return array_reduce($stmt->fetchAll(), function($solicitudes, $solicitud){
+
+            $tipo = $solicitud['Tipo'];
+
+            $tipo = strpos($tipo, 'NUEVA') !== false ? 'nuevas' : 'renovacion';
+
+            $solicitudes['normal'][$tipo] = $solicitud['solicitudes'];
+            return $solicitudes;
+        }, $solicitudes);
+
+
     }
 
     /**
@@ -348,7 +360,17 @@ class SolicitudesRespository
 
         $stmt->execute();
 
-        return $stmt->fetchAll();
+         $solicitudes = array();
+
+        return array_reduce($stmt->fetchAll(), function($solicitudes, $solicitud){
+
+            $tipo = $solicitud['Tipo'];
+
+            $tipo = strpos($tipo, 'NUEVA') !== false ? 'nuevas' : 'renovacion';
+
+            $solicitudes['joven'][$tipo] = $solicitud['solicitudes'];
+            return $solicitudes;
+        }, $solicitudes);
     }
 
 
@@ -402,7 +424,16 @@ class SolicitudesRespository
 
         $stmt->execute();
 
-        return $stmt->fetchAll();
+        $solicitudes = array();
+
+        return array_reduce($stmt->fetchAll(), function($solicitudes, $solicitud){
+
+            $tipo = $solicitud['Tipo'];
+            $tipo = strpos($tipo, 'NUEVA') !== false ? 'nuevas' : 'renovacion';
+            $solicitudes['tercera_edad'][$tipo] = $solicitud['solicitudes'];
+
+            return $solicitudes;
+        }, $solicitudes);
     }
 
     /**
@@ -448,7 +479,12 @@ class SolicitudesRespository
 
         $stmt->execute();
 
-        return $stmt->fetchAll();
+        $solicitudes = array();
+
+        return array_reduce($stmt->fetchAll(), function($solicitudes, $solicitud){
+            $solicitudes['duplicados']['nuevas'] = $solicitud['solicitudes'];
+            return $solicitudes;
+        }, $solicitudes);
     }
 
 
@@ -491,7 +527,12 @@ class SolicitudesRespository
 
         $stmt->execute();
 
-        return $stmt->fetchAll();
+        $solicitudes = array();
+
+        return array_reduce($stmt->fetchAll(), function($solicitudes, $solicitud){
+            $solicitudes['infantil']['nuevas'] = $solicitud['solicitudes'];
+            return $solicitudes;
+        }, $solicitudes);
     }
 
 
