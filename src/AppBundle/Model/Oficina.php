@@ -83,7 +83,9 @@ class Oficina
      */
     public function getCapacidad()
     {
-        $this->capacidad = (int)($this->getCitasPorHora() * $this->getHoras());
+        //Se quita una cita por cada franja horaria porque la primera cita despues de la apertura
+        //no está disponible.
+        $this->capacidad = (int)($this->getCitasPorHora() * $this->getHoras()) - count($this->horarios);
 
         return $this->capacidad;
     }
@@ -117,7 +119,7 @@ class Oficina
      */
     public function getCitasPorHora()
     {
-        $this->citasPorHora =  count(explode(',', $this->patronCitas));
+        $this->citasPorHora = count(explode(',', $this->patronCitas));
 
         return $this->citasPorHora;
     }
@@ -130,7 +132,7 @@ class Oficina
      */
     private function setPatronCitas($patron)
     {
-        if(empty($patron)) {
+        if (empty($patron)) {
             throw new \Exception("No se pueden calcular las horas sin el patrón de citas");
         }
 
@@ -179,7 +181,6 @@ class Oficina
     }
 
 
-
     /**
      * @return mixed
      */
@@ -205,42 +206,11 @@ class Oficina
     {
         $porcentaje = 100 * ($this->getOcupacion() / $this->getCapacidadReal());
 
-        return (float)  round($porcentaje, 2);
+        return (float)round($porcentaje, 2);
     }
 
 
-    /**
-     * @return string
-     */
-    function __toString()
-    {
-        return (string)$this->id;
-    }
 
-    /**
-     * @return array
-     */
-    function toArray()
-    {
-        return [
-            'id'             => $this->getId(),
-            'nombre'         => filter_var($this->getNombre(), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-            'citas_hora'     => $this->getCitasPorHora(),
-            'horas'          => $this->getHoras(),
-            'capacidad'      => $this->getCapacidad(),
-            'hueco_no_habil' => $this->getHuecosNoHabiles(),
-            'capacidad_real' => $this->getCapacidadReal(),
-            'citas'          => $this->getCitas(),
-            'bloqueadas'     => $this->getBloqueadas(),
-            'ocupacion'      => $this->getOcupacion(),
-            'porcentaje_ocupacion' => $this->getPorcentajeOcupacion(),
-            /**
-            'horarios' => implode('; ',array_map(function($horario){
-                return implode('-', $horario);
-            }, $this->horarios))
-             **/
-        ];
-    }
 
     /**
      * @return float|int
@@ -276,7 +246,7 @@ class Oficina
         list($horas, $minutos, $segundos) = explode(':', $fin);
         $horaFin->setTime($horas, $minutos, $segundos);
 
-        $totalHoras = ($horaFin->getTimestamp() - $horaInicio->getTimestamp()) / (60 * 60);
+        $totalHoras = (($horaFin->getTimestamp() - $horaInicio->getTimestamp()) / (60 * 60));
 
         return $totalHoras;
     }
@@ -315,6 +285,34 @@ class Oficina
         $self->addHorario($oficina);
 
         return $self;
+    }
+
+    /**
+     * @return string
+     */
+    function __toString()
+    {
+        return (string)$this->id;
+    }
+
+    /**
+     * @return array
+     */
+    function toArray()
+    {
+        return [
+            'id'                   => $this->getId(),
+            'nombre'               => filter_var($this->getNombre(), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+            //'citas_hora'     => $this->getCitasPorHora(),
+            //'horas'          => $this->getHoras(),
+            //'capacidad'      => $this->getCapacidad(),
+            //'hueco_no_habil' => $this->getHuecosNoHabiles(),
+            'citas'                => $this->getCitas(),
+            'bloqueadas'           => $this->getBloqueadas(),
+            'ocupacion'            => $this->getOcupacion(),
+            'capacidad_real'       => $this->getCapacidadReal(),
+            'porcentaje_ocupacion' => $this->getPorcentajeOcupacion(),
+        ];
     }
 
 } 
