@@ -9,10 +9,10 @@
 namespace AppBundle\Repository;
 
 
-use Doctrine\DBAL\Driver\Connection;
 use AppBundle\Model\Oficina;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use AppBundle\Util\DateUtil;
+use Doctrine\DBAL\Driver\Connection;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class CitasRepository
 {
@@ -30,31 +30,15 @@ class CitasRepository
         $this->connection = $connection;
     }
 
-    public function findCitasPorOficina(\DateTime $hoy)
-    {
-
-        $manana = $hoy->add(\DateInterval::createFromDateString('+1 day'));
-
-        $citas_hoy    = $this->findCapacidadPorOficina($hoy);
-        $citas_manana = $this->findCapacidadPorOficina($manana);
-
-        $result = array_merge_recursive($citas_hoy, $citas_manana);
-
-        return $result;
-
-
-    }
-
 
     /**
-     * @param \DateTime $fecha
+     * @param \DateTimeImmutable $fecha
      *
      * @return Oficina[]
      */
-    public function findCapacidadPorOficina(\DateTime $fecha)
+    public function findCapacidadPorOficina(\DateTimeImmutable $fecha)
     {
-        $siguiente = clone $fecha;
-        $siguiente->add(\DateInterval::createFromDateString('+1 day'));
+        $siguiente = $fecha->modify('+1 day');
 
         $dia           = DateUtil::dayOfWeek($fecha);
         $dia_siguiente = DateUtil::dayOfWeek($siguiente);
@@ -65,9 +49,8 @@ class CitasRepository
               Denominacion,
               patron_citas,
               h.Dia,
-              Hora_inicio,
-              Hora_fin,
-
+              CASE WHEN h.Hora_inicio < e.Hora_inicio THEN e.Hora_inicio ELSE h.Hora_inicio END AS Hora_inicio,
+              CASE WHEN h.Hora_fin < e.Hora_fin THEN h.Hora_fin ELSE e.Hora_fin END AS Hora_fin,
               (SELECT
                 COUNT(*)
               FROM
@@ -113,6 +96,7 @@ class CitasRepository
               t_punto_venta pv
               JOIN t_horario_punto_venta h
                 ON (pv.Id = h.Id_punto_venta)
+                JOIN t_esquema e ON (e.Activo = 1)
             WHERE pv.Visible = 1
               AND (h.Dia = ? OR h.Dia = ?)
             ORDER BY pv.Denominacion
@@ -144,8 +128,8 @@ class CitasRepository
             if (isset($resultado[$id])) {
                 $elem = $resultado[$id];
 
-                if(!$elem instanceof Oficina) {
-                  throw new Exception("El elemento con Id = {$id} no es un objeto de tipo Oficina");
+                if (!$elem instanceof Oficina) {
+                    throw new Exception("El elemento con Id = {$id} no es un objeto de tipo Oficina");
                 }
 
                 $elem->addHorario($oficina);
@@ -155,6 +139,83 @@ class CitasRepository
         }
 
         return $resultado;
+    }
+
+
+    /**
+     * @param \DateTimeInterface $hoy
+     *
+     * @return array
+     */
+    public function finHorasDisponibles(\DateTimeInterface $hoy)
+    {
+        $esquema = $this->findEsquemaActivo();
+
+        $fechaInicio = $this->createDateInmutable($hoy, $esquema['hora_inicio']);
+        $fechaFin    = $this->createDateInmutable($hoy, $esquema['hora_fin']);
+
+
+        $intervalos = floor(($fechaFin->getTimestamp() - $fechaInicio->getTimestamp()) / $esquema['segundos']);
+        $horas      = [];
+
+        for ($i = 0; $i < $intervalos - 1; $i++) {
+            $sec = $i * (int)$esquema['segundos'];
+
+            if ($fechaInicio->add(new \DateInterval(sprintf("PT%sS", $sec)))->format('s') !== '00') {
+                $sec += 150;
+            }
+
+
+            //Todo quitar el array cuando no se vaya imprimir para hacer la interseccion de horas correctamente
+            $horas[] =[
+                $fechaInicio
+                    ->add(new \DateInterval(sprintf("PT%sS", $sec)))
+                    ->format('H:i:s')
+            ];
+        }
+
+        return $horas;
+
+    }
+
+    /**
+     * @param \DateTimeInterface $fecha
+     * @param  string   $hora
+     *
+     * @return bool|\DateTimeImmutable
+     */
+    private function createDateInmutable(\DateTimeInterface $fecha, $hora)
+    {
+        list($horas, $minutos, $segundos) = explode(':', $hora, 3);
+
+        if($fecha instanceof \DateTime) {
+            $inmutable = \DateTimeImmutable::createFromMutable($fecha);
+        } else {
+            $inmutable = $fecha;
+        }
+
+        return $inmutable->setTime($horas, $minutos, $segundos);
+    }
+
+
+    /**
+     * @return array
+     */
+    public function findEsquemaActivo()
+    {
+        $sql = "
+          SELECT
+            Hora_Inicio as hora_inicio,
+            Hora_Fin as hora_fin,
+            Duracion_seg as segundos
+          FROM t_esquema WHERE Activo = 1
+          ";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute();
+        $esquema = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return $esquema;
     }
 
 }

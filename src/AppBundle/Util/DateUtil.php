@@ -4,7 +4,7 @@ namespace AppBundle\Util;
 class DateUtil
 {
 
-    static function dayOfWeek(\DateTime $fecha)
+    static function dayOfWeek(\DateTimeInterface $fecha)
     {
         $dia = $fecha->format('D');
 
