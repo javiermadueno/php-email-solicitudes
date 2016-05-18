@@ -1,8 +1,10 @@
 {% extends 'mail/base.html.twig' %}
 
+{% import 'mail/dia_semana.twig' as dias %}
+
 {% block body %}
     <div class=WordSection1>
-    <p class=MsoNormal>Solicitudes Completadas desde el &nbsp;Jueves 05/04/2016
+    <p class=MsoNormal>Solicitudes Completadas desde el {{ dias.dia_semana(desde) }}  {{ desde|date('d/m/Y') }}
         <o:p></o:p>
     </p>
     <p class=MsoNormal>
@@ -19,7 +21,7 @@
     {% include 'mail/acumulado.html.twig' %}
 
 
-    <p class=MsoNormal><b>Citas concertadas</b><span class=apple-converted-space>&nbsp;</span>del 05/05 al 06/05
+    <p class=MsoNormal><b>Citas concertadas</b><span class=apple-converted-space>&nbsp;</span>del {{ hoy|date('d/m') }} al {{ manana|date('d/m') }}
         <o:p></o:p>
     </p>
     <p class=MsoNormal>

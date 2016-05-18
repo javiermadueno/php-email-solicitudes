@@ -1,0 +1,13 @@
+{% macro dia_semana(fecha) %}
+    {% set dias = {
+        'Mon': 'Lunes',
+        'Tue': 'Martes',
+        'Wed': 'Miércoles',
+        'Thu': 'Jueves',
+        'Fri': 'Viernes',
+        'Sat': 'Sábado',
+        'Sun': 'Domingo'
+    } %}
+
+    {{ dias[ fecha|date('D') ]|default('') }}
+{% endmacro %}

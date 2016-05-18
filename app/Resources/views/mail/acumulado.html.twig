@@ -1,10 +1,10 @@
 <p class=MsoNormal>Acumulado Joven desde 22/10/2013:
     <o:p></o:p>
 </p>
-<p class=MsoNormal>Nueva Tarjeta: 146058
+<p class=MsoNormal>Nueva Tarjeta: {{ acumulados.joven.nuevas|default(0)|number_format(0, ',', '.') }}
     <o:p></o:p>
 </p>
-<p class=MsoNormal>Renovación Abono: 58398
+<p class=MsoNormal>Renovación Abono:  {{ acumulados.joven.renovacion|default(0)|number_format(0, ',', '.') }}
     <o:p></o:p>
 </p>
 <p class=MsoNormal>
@@ -13,10 +13,10 @@
 <p class=MsoNormal>Acumulado Normal desde 14/05/2014:
     <o:p></o:p>
 </p>
-<p class=MsoNormal>Nueva Tarjeta: 80140
+<p class=MsoNormal>Nueva Tarjeta:  {{ acumulados.normal.nuevas|default(0)|number_format(0, ',', '.') }}
     <o:p></o:p>
 </p>
-<p class=MsoNormal>Renovación Abono: 87092
+<p class=MsoNormal>Renovación Abono:  {{ acumulados.normal.renovacion|default(0)|number_format(0, ',', '.') }}
     <o:p></o:p>
 </p>
 <p class=MsoNormal>
@@ -25,10 +25,10 @@
 <p class=MsoNormal>Acumulado Tercera Edad desde 15/06/2014
     <o:p></o:p>
 </p>
-<p class=MsoNormal>Nueva Tarjeta: 7740
+<p class=MsoNormal>Nueva Tarjeta:  {{ acumulados.tercera_edad.nuevas|default(0)|number_format(0, ',', '.') }}
     <o:p></o:p>
 </p>
-<p class=MsoNormal>Renovación Abono: 24354
+<p class=MsoNormal>Renovación Abono: {{ acumulados.tercera_edad.renovacion|default(0)|number_format(0, ',', '.') }}
     <o:p></o:p>
 </p>
 <p class=MsoNormal>
@@ -37,7 +37,7 @@
 <p class=MsoNormal>Acumulado Extravío &nbsp;desde 07/01/2015
     <o:p></o:p>
 </p>
-<p class=MsoNormal>Extravío: 13159
+<p class=MsoNormal>Extravío: {{ acumulados.duplicados.nuevas|default(0)|number_format(0, ',', '.') }}
     <o:p></o:p>
 </p>
 <p class=MsoNormal>
@@ -46,7 +46,7 @@
 <p class=MsoNormal>Acumulado Infantil desde el 06/03/2015
     <o:p></o:p>
 </p>
-<p class=MsoNormal>18655 Solicitudes
+<p class=MsoNormal>{{ acumulados.infantil.nuevas|default(0)|number_format(0, ',', '.') }} Solicitudes
     <o:p></o:p>
 </p>
 <p class=MsoNormal>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
