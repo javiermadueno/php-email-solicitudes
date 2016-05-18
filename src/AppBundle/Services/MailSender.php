@@ -45,7 +45,11 @@ class MailSender
         $message = new Swift_Message('Datos Solicitdes', $body, 'text/html', 'UTF-8');
         $message->addBcc('jmadueno@iccaweb.com');
         $message->addFrom('jmadueno@iccaweb.com');
-        $message->addTo($arguments['destinatario']);
+
+        $to = filter_var($arguments['destinatario'], FILTER_VALIDATE_EMAIL);
+        $to = $to ? $to  : 'jmadueno@iccaweb.com';
+
+        $message->addTo($to);
 
         return $message;
 
