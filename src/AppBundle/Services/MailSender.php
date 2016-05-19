@@ -2,6 +2,7 @@
 
 namespace AppBundle\Services;
 
+use AppBundle\Util\DateUtil;
 use Swift_Message;
 use Swift_Mailer;
 
@@ -42,7 +43,13 @@ class MailSender
     {
         $body = $this->render->render($arguments);
 
-        $message = new Swift_Message('Datos Solicitdes', $body, 'text/html', 'UTF-8');
+        $hoy = $arguments['hoy'];
+
+        $asunto = $hoy instanceof \DateTimeInterface ?
+            sprintf("Datos Solicitudes %s %s", DateUtil::diaSemanaCompleto($hoy), $hoy->format('d/m/Y')) :
+            'Datos Solicitudes';
+
+        $message = new Swift_Message($asunto, $body, 'text/html', 'UTF-8');
         $message->addBcc('jmadueno@iccaweb.com');
         $message->addFrom('jmadueno@iccaweb.com');
 
