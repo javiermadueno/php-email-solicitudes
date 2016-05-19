@@ -16,5 +16,10 @@ parameters:
     mailer_user:       ~
     mailer_password:   ~
 
+
+    email.solicitudes.to: dionisio.gonzalez@crtm.es
+    email.solicitudes.cc: mfernandez@iccaweb.com
+    email.solicitudes.bcc: jmadueno@iccaweb.com
+
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt

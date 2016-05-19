@@ -13,14 +13,27 @@ class MailSender
      */
     protected $mailer;
 
+    protected $to;
+
+    protected $cc;
+
+    protected $bcc;
+
     /**
      * @param Swift_Mailer $mailer
      * @param MailRender   $render
+     * @param  string      $to
+     * @param  string      $cc
+     * @param  string      $bcc
      */
-    public function __construct(Swift_Mailer $mailer, MailRender $render)
+    public function __construct(Swift_Mailer $mailer, MailRender $render, $to, $cc, $bcc)
     {
         $this->mailer = $mailer;
         $this->render = $render;
+
+        $this->to = $to;
+        $this->cc = $cc;
+        $this->bcc = $bcc;
     }
 
     /**

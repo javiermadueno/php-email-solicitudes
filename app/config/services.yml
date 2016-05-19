@@ -18,4 +18,4 @@ services:
 
    app.services.mail_sender:
        class: AppBundle\Services\MailSender
-       arguments: ['@swiftmailer.mailer', '@app.services.mail_render']
+       arguments: ['@swiftmailer.mailer', '@app.services.mail_render', '%email.solicitudes.to%', '%email.solicitudes.cc%', '%email.solicitudes.bcc%']
