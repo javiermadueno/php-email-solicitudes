@@ -19,3 +19,22 @@ services:
    app.services.mail_sender:
        class: AppBundle\Services\MailSender
        arguments: ['@swiftmailer.mailer', '@app.services.mail_render', '%email.solicitudes.to%', '%email.solicitudes.cc%', '%email.solicitudes.bcc%']
+
+   app.excel.generator:
+       class: AppBundle\Services\ExcelGenerator
+
+   app.listado.duplicados:
+       class: AppBundle\Services\SolicitudesDuplicadosGenerator
+       arguments: ['@solicitudes_repository', '@app.excel.generator']
+
+   app.listado.solicitudes:
+       class: AppBundle\Services\SolicitudesGenerator
+       arguments: ['@solicitudes_repository', '@app.excel.generator']
+
+   app.dropbox.client:
+        class: Dropbox\Client
+        arguments: ['%dropbox.access.token%', '%dropbox.app.secret%']
+
+   app.dropbox.sender:
+        class: AppBundle\Services\DropBox\DropboxSender
+        arguments: ['@app.dropbox.client']

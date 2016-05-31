@@ -100,6 +100,9 @@ class SolicitudesRespository
             ORDER BY z.tipo_abono
         ";
 
+
+
+
         $stmt = $this->connection->prepare($sql);
 
         $stmt->bindValue(1, $desde->format(self::FORMATO_FECHA));
@@ -125,7 +128,7 @@ class SolicitudesRespository
     {
         $sql = "
             SELECT
-              'Por Extravio'  as tipo ,
+              'Por Extravío'  as tipo ,
               COUNT(*) solicitudes
             FROM
               (SELECT DISTINCT
@@ -533,6 +536,63 @@ class SolicitudesRespository
             $solicitudes['infantil']['nuevas'] = $solicitud['solicitudes'];
             return $solicitudes;
         }, $solicitudes);
+    }
+
+    public function findListadoSolicitudesNormales()
+    {
+        $hoy = new \DateTimeImmutable('now');
+
+        $sql = file_get_contents(__DIR__.'/../../../queries/solicitudes_mes.sql');
+
+        $stmt = $this->connection->prepare($sql);
+
+        $hoy =         $hoy->modify('first day of this month');
+        $mesAnterior = $hoy->modify('first day of previous month');
+
+
+        $stmt->bindValue(1, $mesAnterior->format(self::FORMATO_FECHA));
+        $stmt->bindValue(2, $hoy->format(self::FORMATO_FECHA));
+        $stmt->bindValue(3, $hoy->format(self::FORMATO_FECHA));
+        $stmt->bindValue(4, $mesAnterior->format(self::FORMATO_FECHA));
+        $stmt->bindValue(5, $hoy->format(self::FORMATO_FECHA));
+        $stmt->bindValue(6, $hoy->format(self::FORMATO_FECHA));
+
+        try {
+            $stmt->execute();
+        } catch(\PDOException $e) {
+            return [];
+        }
+
+
+        $solicitudes = $stmt->fetchAll();
+
+        return $solicitudes;
+    }
+
+
+    public function findSolicitudesDuplicados()
+    {
+        $hoy = new \DateTimeImmutable('now');
+
+        $sql = file_get_contents(__DIR__.'/../../../queries/duplicados.sql');
+
+        $stmt = $this->connection->prepare($sql);
+
+        $hoy =         $hoy->modify('first day of this month');
+        $mesAnterior = $hoy->modify('first day of previous month');
+
+        $stmt->bindValue(1, $mesAnterior->format(self::FORMATO_FECHA));
+
+        try {
+            $stmt->execute();
+        } catch(\PDOException $e) {
+            return [];
+        }
+
+        $solicitudes = $stmt->fetchAll();
+
+        return $solicitudes;
+
     }
 
 
