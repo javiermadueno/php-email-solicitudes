@@ -17,9 +17,9 @@ parameters:
     mailer_password:   ~
 
 
-    email.solicitudes.to: dionisio.gonzalez@crtm.es
-    email.solicitudes.cc: mfernandez@iccaweb.com
-    email.solicitudes.bcc: jmadueno@iccaweb.com
+    email.solicitudes.to: ~
+    email.solicitudes.cc: ~
+    email.solicitudes.bcc: ~
     dropbox.access.token: ~
     dropbox.app.secret: ~
 
