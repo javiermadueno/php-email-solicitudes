@@ -19,7 +19,7 @@ SELECT
   a.Telefono1,
   a.Telefono2,
   a.Correo_electronico,
-  a.Transferencia,
+  CASE WHEN a.Transferencia = 0 THEN 'FALSE' ELSE 'TRUE' END AS Transferencia,
   b.Estado
 FROM
   t_solicitud_duplicado a,
