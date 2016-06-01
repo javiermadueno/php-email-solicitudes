@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jmadueno
- * Date: 31/05/2016
- * Time: 13:00
- */
+
 
 namespace AppBundle\Services;
 
@@ -28,6 +23,7 @@ class ExcelGenerator
     {
         $values = [];
 
+        //Pone el header en negrita
         $values[] = $fields;
 
         foreach($data as $row) {
@@ -42,6 +38,7 @@ class ExcelGenerator
         $name = __DIR__.'/../../../solicitudes/'.$name;
 
         $this->autosizeWorksheet($this->excel->getActiveSheet());
+        $this->firstRowBold($this->excel->getActiveSheet(), $fields);
 
         $this->writter->save($name);
 
@@ -58,6 +55,15 @@ class ExcelGenerator
         foreach ($cellIterator as $cell) {
             $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
         }
+    }
+
+
+    protected function firstRowBold(\PHPExcel_Worksheet $sheet, $header)
+    {
+        $first_letter = \PHPExcel_Cell::stringFromColumnIndex(0);
+        $last_letter = \PHPExcel_Cell::stringFromColumnIndex(count($header)-1);
+        $header_range = "{$first_letter}1:{$last_letter}1";
+        $sheet->getStyle($header_range)->getFont()->setBold(true);
     }
 
 
