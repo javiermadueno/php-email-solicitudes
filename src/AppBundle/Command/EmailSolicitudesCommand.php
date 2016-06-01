@@ -4,24 +4,15 @@ namespace AppBundle\Command;
 
 use AppBundle\Repository\SolicitudesRespository;
 use AppBundle\Util\DateUtil;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class EmailSolicitudesCommand extends ContainerAwareCommand
+class EmailSolicitudesCommand extends BaseCommand
 {
-    /**
-     * @var InputInterface
-     */
-    protected $input;
 
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
 
     protected function configure()
     {
@@ -78,27 +69,6 @@ class EmailSolicitudesCommand extends ContainerAwareCommand
 
     }
 
-    /**
-     * @param InputInterface $input
-     *
-     * @return $this
-     */
-    protected function setInput(InputInterface $input)
-    {
-        $this->input = $input;
-        return $this;
-    }
-
-    /**
-     * @param OutputInterface $output
-     *
-     * @return $this
-     */
-    protected function setOutput(OutputInterface $output)
-    {
-        $this->output = $output;
-        return $this;
-    }
 
     /**
      * @param \DateTimeInterface $desde

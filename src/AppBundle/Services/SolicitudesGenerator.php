@@ -9,7 +9,6 @@
 namespace AppBundle\Services;
 
 use AppBundle\Repository\SolicitudesRespository;
-use AppBundle\Services\ExcelGenerator;
 
 
 class SolicitudesGenerator
@@ -60,7 +59,10 @@ class SolicitudesGenerator
         'Fecha cancelación usuario'
     ];
 
-
+    /**
+     * @param SolicitudesRespository $repository
+     * @param ExcelGenerator         $generator
+     */
     public function __construct(SolicitudesRespository $repository, ExcelGenerator $generator)
     {
         $this->generator = $generator;

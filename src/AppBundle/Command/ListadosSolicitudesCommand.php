@@ -2,33 +2,24 @@
 
 namespace AppBundle\Command;
 
-use AppBundle\Services\ExcelGenerator;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
+
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ListadosSolicitudesCommand extends ContainerAwareCommand
+class ListadosSolicitudesCommand extends BaseCommand
 {
 
-    /**
-     * @var InputInterface
-     */
-    protected $input;
 
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
 
     protected function configure()
     {
         $this
             ->setName('listados:solicitudes')
-            ->setDescription('...')
-            ->addArgument('argument', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option', null, InputOption::VALUE_NONE, 'Option description')
+            ->setDescription('Generea archivos de Excel con los listados de solicitudes')
+            ->addOption('to-dropbox', null, InputOption::VALUE_NONE, 'Envia los listados a DropBox')
+            ->addOption('--duplicados', null, InputOption::VALUE_NONE, 'Genera Excel de duplicados con el nombre de archivo especificado')
+            ->addOption('--solicitudes', null, InputOption::VALUE_NONE, 'Genera Excel de solicitudes del sistema con el nombre de archivo especificado')
         ;
     }
 
@@ -40,38 +31,34 @@ class ListadosSolicitudesCommand extends ContainerAwareCommand
 
         $container = $this->getContainer();
 
-        $dropbox = $container->get('app.dropbox.sender');
+        $duplicados = $solicitudes = null;
 
-        $duplicados = $container->get('app.listado.duplicados')->generate();
-        $dropbox->send($duplicados);
-        $output->writeln("Generado el fichero " . $duplicados->getFilename());
+        if($input->getOption('duplicados') || !$input->getOption('solicitudes')) {
+            $duplicados = $container->get('app.listado.duplicados')->generate();
+            $output->writeln("Generado el fichero " . $duplicados->getFilename());
+        }
 
-        $solicitudes = $container->get('app.listado.solicitudes')->generate();
-        $dropbox->send($solicitudes);
-        $output->writeln("Generado el fichero " . $solicitudes->getFilename());
+        if($input->getOption('solicitudes') || !$input->getOption('duplicados')) {
+            $solicitudes = $container->get('app.listado.solicitudes')->generate();
+            $output->writeln("Generado el fichero " . $solicitudes->getFilename());
+        }
+
+
+        if($input->getOption('to-dropbox')) {
+            $dropbox = $container->get('app.dropbox.sender');
+
+            if($duplicados instanceof \SplFileObject) {
+                $dropbox->send($duplicados);
+                $output->writeln('Enviado a Dropbox el fichero '. $duplicados->getFilename());
+            }
+
+            if($solicitudes instanceof \SplFileObject) {
+                $dropbox->send($solicitudes);
+                $output->writeln('Enviado a Dropbox el fichero ' . $solicitudes->getFilename());
+            }
+        }
 
     }
 
-    /**
-     * @param InputInterface $input
-     *
-     * @return $this
-     */
-    protected function setInput(InputInterface $input)
-    {
-        $this->input = $input;
-        return $this;
-    }
-
-    /**
-     * @param OutputInterface $output
-     *
-     * @return $this
-     */
-    protected function setOutput(OutputInterface $output)
-    {
-        $this->output = $output;
-        return $this;
-    }
 
 }
