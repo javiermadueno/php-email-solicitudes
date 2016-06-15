@@ -1,6 +1,6 @@
 SELECT 
   a.Id,
-  a.Fecha_peticion,
+  CONVERT(VARCHAR(10), a.Fecha_peticion, 103) + ' ' + CONVERT(VARCHAR(8), a.Fecha_peticion, 108) as Fecha_peticion,
   a.Documento_personal,
   a.Tipo_documento,
   a.Nombre,

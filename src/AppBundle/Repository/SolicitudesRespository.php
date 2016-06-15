@@ -14,7 +14,7 @@ use Doctrine\DBAL\Driver\Connection;
 class SolicitudesRespository
 {
 
-    const FORMATO_FECHA = 'Y-m-d';
+    const FORMATO_FECHA = 'Y-d-m';
 
     protected $fechaInicioNormal;
 
