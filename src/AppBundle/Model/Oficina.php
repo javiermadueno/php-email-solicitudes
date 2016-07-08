@@ -65,9 +65,11 @@ class Oficina
      */
     public function getBloqueadas()
     {
+		$this->getOcupacion();
+		
         $maxBloqueadas = $this->getCapacidad() - $this->getCitas();
 
-        return min($this->bloqueadas, $maxBloqueadas);
+        return max(0, min($this->bloqueadas, $maxBloqueadas));
     }
 
     /**
@@ -103,6 +105,7 @@ class Oficina
      */
     public function getCitas()
     {
+		$this->getOcupacion();
         return $this->citas;
     }
 
@@ -195,8 +198,24 @@ class Oficina
     public function getOcupacion()
     {
         $ocupados = $this->citas + $this->bloqueadas;
+		$capacidadReal = $this->getCapacidadReal();
+		
+		if($ocupados > $capacidadReal) {
+			$sobran  = $ocupados - $capacidadReal;
+			
+			if($this->bloqueadas > $sobran) {
+				$this->setBloqueadas($this->bloqueadas - $sobran);
+			} else {
+				
+				$sobran = $sobran - $this->bloqueadas;
+				$this->setBloqueadas(0);
+				$this->setCitas($this->citas - $sobran);
+			}
+		}
+		
+		$ocupados = $this->citas + $this->bloqueadas;
 
-        return min($ocupados, $this->getCapacidadReal());
+        return $ocupados;
     }
 
     /**
@@ -305,8 +324,8 @@ class Oficina
             'nombre'               => filter_var($this->getNombre(), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
             //'citas_hora'     => $this->getCitasPorHora(),
             //'horas'          => $this->getHoras(),
-            //'capacidad'      => $this->getCapacidad(),
-            //'hueco_no_habil' => $this->getHuecosNoHabiles(),
+            'capacidad'            => $this->getCapacidad(),
+            'hueco_no_habil'       => $this->getHuecosNoHabiles(),
             'citas'                => $this->getCitas(),
             'bloqueadas'           => $this->getBloqueadas(),
             'ocupacion'            => $this->getOcupacion(),

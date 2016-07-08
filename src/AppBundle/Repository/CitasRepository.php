@@ -89,7 +89,7 @@ class CitasRepository
                 t_estados_cita b
               WHERE a.Id = b.Id_cita
                 AND b.Estado = 'Bloqueada'
-                AND (b.razon <> 'Hora no hábil' and b.razon not like '%Día no hábil%' and b.razon not like '%sin servicio%')
+                AND (b.razon <> 'Hora no hábil' and b.razon not like '%Día no hábil%' and b.razon not like '%sin servicio%' and b.razon not like '%descanso%' )
                 AND a.Id_punto_venta = pv.Id
                 AND ( CONVERT(DATE, a.Fecha) = ? OR CONVERT(DATE, a.Fecha) = ? )
                 ) AS bloqueadas_oficina
